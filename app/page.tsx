@@ -1,6 +1,7 @@
 "use client";
 
 import AttendanceModal from "@/components/Modal/AttendanceModal";
+import { fetchAttends } from "@/lib/api/attend";
 import { useEffect, useState, useRef } from "react";
 import { DayProps, DayPicker } from "react-day-picker";
 
@@ -34,7 +35,19 @@ TagProps) {
 }
 
 function CustomDay(props: DayProps) {
-  console.log(props.date);
+  const [attends, setAttends] = useState(null);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await fetchAttends();
+        setAttends(data);
+      } catch (err) {
+        setError("Failed to fetch attends");
+        console.error(err);
+      }
+    })();
+  }, []);
   return (
     <div
       className={`pl-2 flex flex-col	justify-around h-[100%] ${
