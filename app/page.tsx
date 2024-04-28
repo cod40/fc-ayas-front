@@ -2,8 +2,10 @@
 
 import AttendanceModal from "@/components/Modal/AttendanceModal";
 import { fetchAttends } from "@/lib/api/attend";
+import { fetcher } from "@/lib/fetcher";
 import { useEffect, useState, useRef } from "react";
 import { DayProps, DayPicker } from "react-day-picker";
+import useSWR from "swr";
 
 type TagProps = {
   text: string;
@@ -83,6 +85,13 @@ const DatePickerComponent: React.FC = () => {
   const [days, setDays] = useState<Date[] | undefined>(initialDays);
   const [showModalParticipationList, setShowModalParticipationList] =
     useState<boolean>(false);
+
+  const { data, isLoading } = useSWR<any>(
+    `${process.env.NEXT_PUBLIC_API_URL}/attends`,
+    fetcher
+  );
+
+  console.log(data);
 
   return (
     <>
