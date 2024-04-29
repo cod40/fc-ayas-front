@@ -35,19 +35,6 @@ TagProps) {
 }
 
 function CustomDay(props: DayProps) {
-  const [attends, setAttends] = useState(null);
-  const [error, setError] = useState("");
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await fetchAttends();
-        setAttends(data);
-      } catch (err) {
-        setError("Failed to fetch attends");
-        console.error(err);
-      }
-    })();
-  }, []);
   return (
     <div
       className={`pl-2 flex flex-col	justify-around h-[100%] ${
@@ -78,11 +65,26 @@ function CustomDay(props: DayProps) {
 
 const DatePickerComponent: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [attends, setAttends] = useState([]);
+  const [error, setError] = useState("");
 
   const initialDays: Date[] = [];
   const [days, setDays] = useState<Date[] | undefined>(initialDays);
   const [showModalParticipationList, setShowModalParticipationList] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await fetchAttends();
+        setAttends(data);
+      } catch (err) {
+        setError("Failed to fetch attends");
+        console.error(err);
+      }
+    })();
+  }, []);
+  console.log(attends);
 
   return (
     <>
