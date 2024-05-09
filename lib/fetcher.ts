@@ -5,5 +5,6 @@ export const fetcher = async (url: string) => {
     const { message } = await res.json();
     throw new Error(message || "Failed to fetch");
   }
+
   return data;
 };
