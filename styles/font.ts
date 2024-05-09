@@ -18,4 +18,4 @@ const noto_sans_kr = Noto_Sans_KR({
   display: "swap",
 });
 
-export const FontClassNames = sumClass(noto_sans_kr.className, roboto.variable);
+export const FontClassNames = sumClass(roboto.className, noto_sans_kr.variable);

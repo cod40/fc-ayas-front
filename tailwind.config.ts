@@ -19,6 +19,8 @@ const config = {
     },
     extend: {
       fontFamily: {
+        roboto: ["var(--roboto)"],
+        sans: ["var(--noto_sans_kr)"],
         // Roboto, notosansKr, sans-serif
       },
       colors: {

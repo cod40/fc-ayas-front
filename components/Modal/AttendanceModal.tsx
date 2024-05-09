@@ -49,7 +49,7 @@ export default function AttendanceModal(props: AttendanceModalProps) {
         onClick={closeModal}
       >
         <div
-          className="w-[800px] h-[800px] bg-[#FFFFFF] rounded-lg shadow-lg overflow-hidden z-20 "
+          className="w-[800px] h-[600px] bg-[#FFFFFF] rounded-lg shadow-lg overflow-hidden z-20 "
           onClick={handleModalClick}
         >
           {/* 모달 헤더 */}
