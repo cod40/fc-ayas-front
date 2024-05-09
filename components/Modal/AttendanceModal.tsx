@@ -1,42 +1,23 @@
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { attendsState } from "../../state/atoms/userState";
 
 type AttendanceModalProps = {
   isModalOpen?: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
+  attendList?: string[];
+  day: number;
 };
 
 export default function AttendanceModal(props: AttendanceModalProps) {
   function closeModal() {
     props.setIsModalOpen(false);
-    console.log("closeModal");
   }
+  console.log(props.day);
 
   function handleModalClick(e: React.MouseEvent<HTMLDivElement>) {
     e.stopPropagation();
   }
-
-  let dummyParticipationList = [
-    {
-      name: "김상도",
-      qqq: "111",
-    },
-    {
-      name: "박찬우",
-      qqq: "111",
-    },
-    {
-      name: "사공용협",
-      qqq: "111",
-    },
-    {
-      name: "홍길동",
-      qqq: "111",
-    },
-    {
-      name: "김상도",
-      qqq: "111",
-    },
-  ]; // 더미데이터
 
   return (
     <>
@@ -54,6 +35,7 @@ export default function AttendanceModal(props: AttendanceModalProps) {
         >
           {/* 모달 헤더 */}
           <div className="px-6 py-4 border-b border-gray-200">
+            {props.day}일
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               참가자 명단
             </h3>
@@ -62,11 +44,11 @@ export default function AttendanceModal(props: AttendanceModalProps) {
           {/* 모달 바디 */}
           <div className="p-6">
             <ul className="divide-y divide-gray-200">
-              {dummyParticipationList.map((participant, index) => (
+              {props.attendList?.map((participant, index) => (
                 <li key={index} className="py-4">
                   <div className="flex items-center space-x-3">
                     <div className="text-sm font-medium text-gray-900">
-                      {participant.name}
+                      {participant}
                     </div>
                     {/* 참가자별 추가 정보가 있다면 여기에 표시 */}
                   </div>
