@@ -1,17 +1,25 @@
 import AttendanceModal from "@/components/Modal/AttendanceModal";
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { attendsState } from "../../../state/atoms/userState";
 
 type DayTextProps = {
   text: string;
+  attendList?: string[];
+  day: number;
 };
 
-function DayText({ text }: DayTextProps) {
+function DayText({ text, attendList, day }: DayTextProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [attends, setAttends] = useRecoilState(attendsState);
+  console.log(attendList.length);
 
   return (
     <>
       {isModalOpen ? (
         <AttendanceModal
+          day={day}
+          attendList={attendList}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
         />
@@ -19,7 +27,9 @@ function DayText({ text }: DayTextProps) {
         ""
       )}
       <div className="flex gap-x-12 text-sm">
-        <button onClick={() => setIsModalOpen(!isModalOpen)}>{text} (0)</button>
+        <button onClick={() => setIsModalOpen(!isModalOpen)}>
+          {text} ({attendList.length})
+        </button>
         <button type="button" className="w-[20px] h-[20px]">
           <img src="/images/attendBtn/disabled.png" alt="participate button" />
         </button>
