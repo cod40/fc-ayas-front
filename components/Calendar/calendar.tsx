@@ -10,6 +10,8 @@ import DayText from "./Day/dayText";
 import { useRecoilState } from "recoil";
 import { attendsState } from "../../state/atoms/userState";
 import { getFormattedDate } from "@/lib/utils";
+import Join from "../SignUp/signUp";
+import SignUpModal from "../\bSignUp/signUp";
 
 function CustomDay(props: DayProps & { attendDates: { [key: string]: any } }) {
   const formattedDate = getFormattedDate(props.date);
@@ -19,7 +21,6 @@ function CustomDay(props: DayProps & { attendDates: { [key: string]: any } }) {
   // console.log(props.date) // date: Wed May 08 2024 00:00:00 GMT+0900 (한국 표준시) {}
   const todayAttendInfo = props.attendDates?.[formattedDate];
 
-  console.log(props.date.getDay());
   return (
     <div
       className={`pl-2 flex flex-col	justify-around h-[100%] ${
@@ -50,35 +51,39 @@ function CustomDay(props: DayProps & { attendDates: { [key: string]: any } }) {
 
 const DatePickerComponent: React.FC = () => {
   const [attends, setAttends] = useRecoilState(attendsState);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/attends`,
     fetcher
   );
 
-  const initialDays: Date[] = [];
-  const [days, setDays] = useState<Date[] | undefined>(initialDays);
-
   useEffect(() => {
     setAttends(data);
   }, [data]);
+
+  const handleJoinClick = () => {
+    setIsModalOpen(true);
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>
-      {/* className={`pl-2 flex flex-col	justify-around h-[100%] ${
-        new Date().getMonth() + 1 !== props.date.getMonth() + 1
-          ? "text-[#ebebe4] cursor-none"
-          : ""
-      } `} */}
-
       <DayPicker
         components={{
           Day: (dayProps) => <CustomDay {...dayProps} attendDates={attends} />,
         }}
         mode="multiple"
       />
+      <button
+        onClick={handleJoinClick}
+        className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-700"
+      >
+        회원가입
+      </button>
+      {isModalOpen && <SignUpModal onClose={() => setIsModalOpen(false)} />}
     </>
   );
 };

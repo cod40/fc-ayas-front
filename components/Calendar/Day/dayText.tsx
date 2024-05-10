@@ -12,7 +12,6 @@ type DayTextProps = {
 function DayText({ text, attendList, day }: DayTextProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [attends, setAttends] = useRecoilState(attendsState);
-  console.log(attendList.length);
 
   return (
     <>

@@ -13,7 +13,6 @@ export default function AttendanceModal(props: AttendanceModalProps) {
   function closeModal() {
     props.setIsModalOpen(false);
   }
-  console.log(props.day);
 
   function handleModalClick(e: React.MouseEvent<HTMLDivElement>) {
     e.stopPropagation();
