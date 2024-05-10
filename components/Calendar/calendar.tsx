@@ -12,6 +12,7 @@ import { attendsState } from "../../state/atoms/userState";
 import { getFormattedDate } from "@/lib/utils";
 import Join from "../SignUp/signUp";
 import SignUpModal from "../\bSignUp/signUp";
+import LoginModal from "../Login/login";
 
 function CustomDay(props: DayProps & { attendDates: { [key: string]: any } }) {
   const formattedDate = getFormattedDate(props.date);
@@ -51,7 +52,8 @@ function CustomDay(props: DayProps & { attendDates: { [key: string]: any } }) {
 
 const DatePickerComponent: React.FC = () => {
   const [attends, setAttends] = useRecoilState(attendsState);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/attends`,
@@ -62,8 +64,12 @@ const DatePickerComponent: React.FC = () => {
     setAttends(data);
   }, [data]);
 
-  const handleJoinClick = () => {
-    setIsModalOpen(true);
+  const handleSignUpClick = () => {
+    setIsSignUpModalOpen(true);
+  };
+
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -78,12 +84,25 @@ const DatePickerComponent: React.FC = () => {
         mode="multiple"
       />
       <button
-        onClick={handleJoinClick}
+        onClick={handleSignUpClick}
         className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-700"
       >
         회원가입
       </button>
-      {isModalOpen && <SignUpModal onClose={() => setIsModalOpen(false)} />}
+
+      <button
+        onClick={handleLoginClick}
+        className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-700"
+      >
+        로그인
+      </button>
+
+      {isSignUpModalOpen && (
+        <SignUpModal onClose={() => setIsSignUpModalOpen(false)} />
+      )}
+      {isLoginModalOpen && (
+        <LoginModal onClose={() => setIsLoginModalOpen(false)} />
+      )}
     </>
   );
 };
