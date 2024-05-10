@@ -21,7 +21,7 @@ const LoginModal = ({ onClose }) => {
       if (result.accessToken) {
         Cookies.set("accessToken", result.accessToken, {
           expires: 7,
-          secure: true,
+          secure: false,
           httpOnly: true,
         });
         console.log("Login success:", formData);
