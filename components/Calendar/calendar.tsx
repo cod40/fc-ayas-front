@@ -1,5 +1,3 @@
-"use client";
-
 import AttendanceModal from "@/components/Modal/AttendanceModal";
 import { fetchAttends } from "@/lib/api/attend";
 import { useEffect, useState, useRef } from "react";
@@ -8,7 +6,11 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
 import DayText from "./Day/dayText";
 import { useRecoilState } from "recoil";
-import { attendsState } from "../../state/atoms/userState";
+import {
+  accessTokenState,
+  attendsState,
+  userInfoState,
+} from "../../state/atoms/userState";
 import { getFormattedDate } from "@/lib/utils";
 import Join from "../SignUp/signUp";
 import SignUpModal from "../\bSignUp/signUp";
@@ -54,6 +56,8 @@ const DatePickerComponent: React.FC = () => {
   const [attends, setAttends] = useRecoilState(attendsState);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [accesstoken] = useRecoilState(accessTokenState);
+  const [userInfo] = useRecoilState(userInfoState);
 
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/attends`,
@@ -83,19 +87,27 @@ const DatePickerComponent: React.FC = () => {
         }}
         mode="multiple"
       />
-      <button
-        onClick={handleSignUpClick}
-        className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-700"
-      >
-        회원가입
-      </button>
+      <div>
+        {accesstoken ? (
+          <p>{`${userInfo?.data?.Nickname}님 아얏스에 오신 것을 환영합니다!`}</p>
+        ) : (
+          <>
+            <button
+              onClick={handleSignUpClick}
+              className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-700"
+            >
+              회원가입
+            </button>
 
-      <button
-        onClick={handleLoginClick}
-        className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-700"
-      >
-        로그인
-      </button>
+            <button
+              onClick={handleLoginClick}
+              className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-700"
+            >
+              로그인
+            </button>
+          </>
+        )}
+      </div>
 
       {isSignUpModalOpen && (
         <SignUpModal onClose={() => setIsSignUpModalOpen(false)} />
