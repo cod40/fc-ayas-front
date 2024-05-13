@@ -1,0 +1,35 @@
+import React from "react";
+import { DayProps } from "react-day-picker";
+import DayText from "./DayToText";
+import { AttendDateItem } from "@/app/stores/app";
+
+export default function Day(props: DayProps & { data: AttendDateItem | null }) {
+  const { data } = props;
+
+  return (
+    <div
+      className={`pl-2 flex flex-col	justify-around h-[100%] ${
+        new Date().getMonth() + 1 !== props.date.getMonth() + 1
+          ? "opacity-10 pointer-events-none"
+          : ""
+      }`}
+    >
+      <div>{props.date.getDate()}</div>
+      <DayText
+        text="(오전) 07 ~ 12"
+        attendList={data?.["0712"] || []}
+        day={props.date.getDay()}
+      />
+      <DayText
+        text="(오후) 12 ~ 18"
+        attendList={data?.["1218"] || []}
+        day={props.date.getDay()}
+      />
+      <DayText
+        text="(오후) 18 ~ 00"
+        attendList={data?.["1800"] || []}
+        day={props.date.getDay()}
+      />
+    </div>
+  );
+}

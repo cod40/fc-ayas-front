@@ -1,58 +1,23 @@
-import AttendanceModal from "@/components/Modal/AttendanceModal";
-import { useEffect, useState, useRef } from "react";
-import { DayProps, DayPicker } from "react-day-picker";
-import useSWR from "swr";
 import { fetcher } from "@/lib/fetcher";
-import DayText from "./Day/dayText";
+import { getFormattedDate } from "@/lib/utils";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { DayPicker } from "react-day-picker";
 import { useRecoilState } from "recoil";
+import Day from "./day";
+import useSWR from "swr";
 import {
   accessTokenState,
   attendsState,
   userInfoState,
-} from "../../state/atoms/userState";
-import { getFormattedDate } from "@/lib/utils";
-import SignUpModal from "../\bSignUp/signUp";
-import LoginModal from "../Login/login";
-import axios from "axios";
+} from "../../../state/atoms/userState";
+import LoginModal from "../login";
+import SignUpModal from "../signup/signUp";
+import { useAppStore } from "@/app/stores/app";
 
-function CustomDay(props: DayProps & { attendDates: { [key: string]: any } }) {
-  const formattedDate = getFormattedDate(props.date);
-
-  // console.log(dateStr); // 달력에 들어오는 date가 20240509로 형식변환돼서 다 들어옴
-  // console.log(props.attendDates); // DB에 들어있는 날짜가 들어옴 `20240514 : {1800: Array(1)}`
-  // console.log(props.date) // date: Wed May 08 2024 00:00:00 GMT+0900 (한국 표준시) {}
-  const todayAttendInfo = props.attendDates?.[formattedDate];
-
-  return (
-    <div
-      className={`pl-2 flex flex-col	justify-around h-[100%] ${
-        new Date().getMonth() + 1 !== props.date.getMonth() + 1
-          ? "opacity-10 pointer-events-none"
-          : ""
-      }`}
-    >
-      <div>{props.date.getDate()}</div>
-      <DayText
-        text="(오전) 07 ~ 12"
-        attendList={todayAttendInfo?.["0712"] || []}
-        day={props.date.getDay()}
-      />
-      <DayText
-        text="(오후) 12 ~ 18"
-        attendList={todayAttendInfo?.["1218"] || []}
-        day={props.date.getDay()}
-      />
-      <DayText
-        text="(오후) 18 ~ 00"
-        attendList={todayAttendInfo?.["1800"] || []}
-        day={props.date.getDay()}
-      />
-    </div>
-  );
-}
-
-const DatePickerComponent: React.FC = () => {
-  const [attends, setAttends] = useRecoilState(attendsState);
+export default function Calendar() {
+  const attends = useAppStore((state) => state.attends);
+  const setAttends = useAppStore((state) => state.setAttends);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [accesstoken, setAccessToken] = useRecoilState(accessTokenState);
@@ -108,7 +73,14 @@ const DatePickerComponent: React.FC = () => {
     <>
       <DayPicker
         components={{
-          Day: (dayProps) => <CustomDay {...dayProps} attendDates={attends} />,
+          Day: (dayProps) => {
+            const { date } = dayProps;
+
+            const formattedDate = getFormattedDate(date) as string;
+            const todayAttendInfo = attends?.[formattedDate];
+
+            return <Day {...dayProps} data={todayAttendInfo} />;
+          },
         }}
         mode="multiple"
       />
@@ -155,6 +127,4 @@ const DatePickerComponent: React.FC = () => {
       )}
     </>
   );
-};
-
-export default DatePickerComponent;
+}

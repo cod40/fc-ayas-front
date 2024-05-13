@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRecoilState } from "recoil";
-import { attendsState } from "../../state/atoms/userState";
+import { attendsState } from "../../../state/atoms/userState";
 
 type AttendanceModalProps = {
   isModalOpen?: boolean;

@@ -1,7 +1,7 @@
-import AttendanceModal from "@/components/Modal/AttendanceModal";
+import AttendanceModal from "@/app/components/modal/AttendanceModal";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
-import { attendsState } from "../../../state/atoms/userState";
+import { attendsState } from "../../../../state/atoms/userState";
 
 type DayTextProps = {
   text: string;
@@ -9,7 +9,7 @@ type DayTextProps = {
   day: number;
 };
 
-function DayText({ text, attendList, day }: DayTextProps) {
+export default function DayToText({ text, attendList, day }: DayTextProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [attends, setAttends] = useRecoilState(attendsState);
 
@@ -36,5 +36,3 @@ function DayText({ text, attendList, day }: DayTextProps) {
     </>
   );
 }
-
-export default DayText;

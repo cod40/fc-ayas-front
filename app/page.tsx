@@ -1,6 +1,6 @@
 "use client";
 
-import DatePickerComponent from "@/components/Calendar/calendar";
+import DatePickerComponent from "@/app/components/calendar";
 import { NextPage } from "next";
 import Head from "next/head";
 import React from "react";

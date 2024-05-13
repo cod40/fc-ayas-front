@@ -1,13 +1,10 @@
 import { login } from "@/lib/api/login";
-import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { useSetRecoilState } from "recoil";
 import { accessTokenState, userInfoState } from "@/state/atoms/userState";
-import useSWR from "swr";
-import { fetcher } from "@/lib/fetcher";
 import axios from "axios";
+import { useState } from "react";
+import { useSetRecoilState } from "recoil";
 
-const LoginModal = ({ onClose }) => {
+export default function Login({ onClose }: { onClose?: () => void }) {
   const setAccessToken = useSetRecoilState(accessTokenState);
   const setUserInfo = useSetRecoilState(userInfoState);
 
@@ -112,6 +109,4 @@ const LoginModal = ({ onClose }) => {
       </div>
     </div>
   );
-};
-
-export default LoginModal;
+}
