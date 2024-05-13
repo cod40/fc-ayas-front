@@ -1,8 +1,16 @@
 import { login } from "@/lib/api/login";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { useSetRecoilState } from "recoil";
+import { accessTokenState, userInfoState } from "@/state/atoms/userState";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import axios from "axios";
 
 const LoginModal = ({ onClose }) => {
+  const setAccessToken = useSetRecoilState(accessTokenState);
+  const setUserInfo = useSetRecoilState(userInfoState);
+
   const [formData, setFormData] = useState({
     nickname: "",
     password: "",
@@ -18,19 +26,22 @@ const LoginModal = ({ onClose }) => {
     e.preventDefault();
     try {
       const result = await login(formData);
-      if (result.accessToken) {
-        Cookies.set("accessToken", result.accessToken, {
-          expires: 7,
-          secure: false,
-          httpOnly: true,
-        });
-        console.log("Login success:", formData);
+
+      const userInfo = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${result?.UserID}`
+      ); // userInfo 정보
+      console.log(userInfo);
+      setUserInfo(userInfo);
+
+      if (result.token) {
+        setAccessToken(result.token);
+        localStorage.setItem("accessToken", result.token);
+        onClose();
       }
-      onClose();
-      console.log(result);
     } catch (error) {
       console.error("Login error:", error.message);
       setError(error.message || "로그인에 실패했습니다.");
+    } finally {
     }
   };
 
