@@ -1,5 +1,4 @@
 import AttendanceModal from "@/components/Modal/AttendanceModal";
-import { fetchAttends } from "@/lib/api/attend";
 import { useEffect, useState, useRef } from "react";
 import { DayProps, DayPicker } from "react-day-picker";
 import useSWR from "swr";
@@ -12,9 +11,9 @@ import {
   userInfoState,
 } from "../../state/atoms/userState";
 import { getFormattedDate } from "@/lib/utils";
-import Join from "../SignUp/signUp";
 import SignUpModal from "../\bSignUp/signUp";
 import LoginModal from "../Login/login";
+import axios from "axios";
 
 function CustomDay(props: DayProps & { attendDates: { [key: string]: any } }) {
   const formattedDate = getFormattedDate(props.date);
@@ -56,8 +55,8 @@ const DatePickerComponent: React.FC = () => {
   const [attends, setAttends] = useRecoilState(attendsState);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [accesstoken] = useRecoilState(accessTokenState);
-  const [userInfo] = useRecoilState(userInfoState);
+  const [accesstoken, setAccessToken] = useRecoilState(accessTokenState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/attends`,
@@ -68,12 +67,38 @@ const DatePickerComponent: React.FC = () => {
     setAttends(data);
   }, [data]);
 
+  useEffect(() => {
+    const sessionAccessToken = sessionStorage.getItem("accessToken");
+    const userID = sessionStorage.getItem("UserID");
+    if (sessionAccessToken && userID) {
+      setAccessToken(sessionAccessToken);
+      // 세션 스토리지에 사용자 정보가 없는 경우 서버로부터 다시 불러오기
+      axios
+        .get(`${process.env.NEXT_PUBLIC_API_URL}/users/${userID}`, {
+          headers: { Authorization: `Bearer ${sessionAccessToken}` },
+        })
+        .then((response) => {
+          setUserInfo(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, [setUserInfo, setAccessToken, accesstoken]);
+
   const handleSignUpClick = () => {
     setIsSignUpModalOpen(true);
   };
 
   const handleLoginClick = () => {
     setIsLoginModalOpen(true);
+  };
+
+  const handleLogoutClick = () => {
+    setUserInfo({});
+    setAccessToken("");
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("UserID");
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -89,7 +114,20 @@ const DatePickerComponent: React.FC = () => {
       />
       <div>
         {accesstoken ? (
-          <p>{`${userInfo?.data?.Nickname}님 아얏스에 오신 것을 환영합니다!`}</p>
+          <div className="flex items-center  p-4 bg-white shadow-md">
+            <p className="text-gray-800 text-lg">
+              {userInfo?.Nickname
+                ? `${userInfo.Nickname}님 아얏스에 오신 것을 환영합니다!`
+                : "로딩 중..."}
+            </p>
+            <button
+              type="button"
+              onClick={handleLogoutClick}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+            >
+              로그아웃
+            </button>
+          </div>
         ) : (
           <>
             <button
