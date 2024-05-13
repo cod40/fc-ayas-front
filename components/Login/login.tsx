@@ -27,21 +27,21 @@ const LoginModal = ({ onClose }) => {
     try {
       const result = await login(formData);
 
+      sessionStorage.setItem("UserID", result?.UserID);
+
       const userInfo = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/users/${result?.UserID}`
       ); // userInfo 정보
-      console.log(userInfo);
       setUserInfo(userInfo);
 
       if (result.token) {
         setAccessToken(result.token);
-        localStorage.setItem("accessToken", result.token);
+        sessionStorage.setItem("accessToken", result.token);
         onClose();
       }
     } catch (error) {
       console.error("Login error:", error.message);
       setError(error.message || "로그인에 실패했습니다.");
-    } finally {
     }
   };
 

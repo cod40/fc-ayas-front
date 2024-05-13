@@ -15,3 +15,8 @@ export function getFormattedDate(date: Date): string {
 
   return `${year}${formattedMonth}${formattedDay}`;
 }
+
+export function loadSessionData(key, defaultValue) {
+  const storedData = sessionStorage.getItem(key);
+  return storedData ? storedData : defaultValue;
+}
