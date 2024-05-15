@@ -4,7 +4,7 @@ import DayText from "./DayToText";
 import { AttendDateItem } from "@/app/stores/app";
 
 export default function Day(props: DayProps & { data: AttendDateItem | null }) {
-  const { data } = props;
+  const { data, formattedDate, userAttendDates } = props;
 
   return (
     <div
@@ -16,19 +16,28 @@ export default function Day(props: DayProps & { data: AttendDateItem | null }) {
     >
       <div>{props.date.getDate()}</div>
       <DayText
+        time={"0712"}
+        formattedDate={formattedDate}
         text="(오전) 07 ~ 12"
         attendList={data?.["0712"] || []}
         day={props.date.getDay()}
+        userAttendDates={userAttendDates}
       />
       <DayText
+        time={"1218"}
+        formattedDate={formattedDate}
         text="(오후) 12 ~ 18"
         attendList={data?.["1218"] || []}
         day={props.date.getDay()}
+        userAttendDates={userAttendDates}
       />
       <DayText
+        time={"1800"}
+        formattedDate={formattedDate}
         text="(오후) 18 ~ 00"
         attendList={data?.["1800"] || []}
         day={props.date.getDay()}
+        userAttendDates={userAttendDates}
       />
     </div>
   );

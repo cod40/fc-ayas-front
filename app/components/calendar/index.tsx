@@ -1,19 +1,19 @@
 import { fetcher } from "@/lib/fetcher";
 import { getFormattedDate } from "@/lib/utils";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { useRecoilState } from "recoil";
 import Day from "./day";
 import useSWR from "swr";
 import {
   accessTokenState,
-  attendsState,
   userInfoState,
 } from "../../../state/atoms/userState";
 import LoginModal from "../login";
 import SignUpModal from "../signup/signUp";
 import { useAppStore } from "@/app/stores/app";
+import isEqual from "lodash/isEqual";
 
 export default function Calendar() {
   const attends = useAppStore((state) => state.attends);
@@ -22,17 +22,39 @@ export default function Calendar() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [accesstoken, setAccessToken] = useRecoilState(accessTokenState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [userAttendDates, setUserAttendDates] = useState({});
 
   const { data, error, isLoading } = useSWR(
     `${process.env.NEXT_PUBLIC_API_URL}/attends`,
     fetcher
   );
 
-  useEffect(() => {
-    setAttends(data);
-  }, [data]);
+  // useInfo의 데이터가 실제로 바뀌면(깊은복사로) 리로딩
+  function useDeepCompareEffect(callback, dependencies) {
+    const currentDependenciesRef = useRef();
+
+    if (!isEqual(currentDependenciesRef.current, dependencies)) {
+      currentDependenciesRef.current = dependencies;
+    }
+
+    useEffect(callback, [currentDependenciesRef.current]);
+  }
+
+  useDeepCompareEffect(() => {
+    if (userInfo?.Attends) {
+      const attendsByDate = userInfo.Attends.reduce((acc, attend) => {
+        acc[attend.Date] = acc[attend.Date] || [];
+        acc[attend.Date].push(attend.Time);
+        return acc;
+      }, {});
+
+      setUserAttendDates(attendsByDate);
+    }
+  }, [userInfo]);
 
   useEffect(() => {
+    setAttends(data);
+
     const sessionAccessToken = sessionStorage.getItem("accessToken");
     const userID = sessionStorage.getItem("UserID");
     if (sessionAccessToken && userID) {
@@ -49,7 +71,7 @@ export default function Calendar() {
           console.error("Error fetching user data:", error);
         });
     }
-  }, [setUserInfo, setAccessToken, accesstoken]);
+  }, [setUserInfo, setAccessToken, accesstoken, data]);
 
   const handleSignUpClick = () => {
     setIsSignUpModalOpen(true);
@@ -79,7 +101,14 @@ export default function Calendar() {
             const formattedDate = getFormattedDate(date) as string;
             const todayAttendInfo = attends?.[formattedDate];
 
-            return <Day {...dayProps} data={todayAttendInfo} />;
+            return (
+              <Day
+                {...dayProps}
+                formattedDate={formattedDate}
+                data={todayAttendInfo}
+                userAttendDates={userAttendDates}
+              />
+            );
           },
         }}
         mode="multiple"

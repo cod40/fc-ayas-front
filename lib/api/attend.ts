@@ -12,3 +12,10 @@ export const fetchAttends = async () => {
     throw new Error("Failed to fetch attend");
   }
 };
+
+export const createAttends = async () => {
+  try {
+  } catch (error) {
+    throw new Error("Failed to create attend");
+  }
+};
