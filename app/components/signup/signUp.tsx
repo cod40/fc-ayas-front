@@ -1,5 +1,7 @@
 import { signUp } from "@/lib/api/signUp";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import crypto from "crypto-js";
 
 const SignUpModal = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -7,14 +9,54 @@ const SignUpModal = ({ onClose }) => {
     nickname: "",
     password: "",
     confirmPassword: "",
+    phone: "",
+    verificationCode: "",
   });
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [certification, setCertification] = useState("");
+
+  const dummyData = [
+    "감자털",
+    "앙기모띠",
+    "최승규탈모",
+    "김상도탈모",
+    "해물볶음",
+    "필립보",
+    "찬우발닦개",
+  ];
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
     if (successMessage) setSuccessMessage("");
+  };
+
+  useEffect(() => {
+    console.log("폼데이터 인증단어 : ", formData.verificationCode);
+  }, [formData.verificationCode]);
+
+  const handleVerificationCodeSubmit = async (e) => {
+    e.preventDefault();
+    const verificationCode = dummyData[Math.floor(Math.random() * 7)];
+    const encryptionCode = crypto.AES.encrypt(
+      verificationCode,
+      "fc-ayas"
+    ).toString();
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/users/signup/verify`,
+        data: {
+          PhoneNumber: formData.phone,
+          Word: verificationCode,
+        },
+      });
+      sessionStorage.setItem("encryptionCode", encryptionCode);
+      setCertification(verificationCode);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -24,10 +66,24 @@ const SignUpModal = ({ onClose }) => {
       return;
     }
 
+    const sessionEncryptionCode = sessionStorage.getItem("encryptionCode");
+
+    const decryptedBytes = crypto.AES.decrypt(
+      sessionEncryptionCode as string,
+      "fc-ayas"
+    );
+    const decryptedMessage = decryptedBytes.toString(crypto.enc.Utf8);
+
+    if (formData.verificationCode !== decryptedMessage) {
+      alert("인증 단어를 확인해주세요!");
+      return;
+    }
+
     try {
       const result = await signUp(formData);
       setSuccessMessage("FC아얏스에 온 것을 환영합니다!");
       setTimeout(() => onClose(), 3000);
+      sessionStorage.removeItem("encryptionCode");
     } catch (error) {
       console.error("SignUp error:", error.message);
       setError(error.message || "회원가입에 실패했습니다.");
@@ -112,6 +168,42 @@ const SignUpModal = ({ onClose }) => {
               onChange={handleChange}
             />
             {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-gray-700"
+            >
+              휴대폰 번호
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              required
+              pattern="[0-9]{3}[0-9]{4}[0-9]{4}"
+              placeholder="01000000000"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+            <button
+              type="button"
+              className="mt-2 bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded"
+              onClick={handleVerificationCodeSubmit}
+            >
+              인증번호 발송
+            </button>
+            <input
+              type="verificationCode"
+              id="verificationCode"
+              name="verificationCode"
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              value={formData.verificationCode}
+              placeholder="인증 문자를 적어주세요"
+              onChange={handleChange}
+            />
           </div>
           <div className="flex justify-end">
             <button

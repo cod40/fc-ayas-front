@@ -8,10 +8,15 @@ export default function Day(props: DayProps & { data: AttendDateItem | null }) {
 
   return (
     <div
-      className={`pl-2 flex flex-col	justify-around h-[100%] ${
+      // className={`pl-2 flex flex-col	justify-around h-[100%] ${
+      //   new Date().getMonth() + 1 !== props.date.getMonth() + 1
+      //     ? "opacity-10 pointer-events-none"
+      //     : ""
+      // }`}
+      className={`flex flex-col justify-around h-full ${
         new Date().getMonth() + 1 !== props.date.getMonth() + 1
-          ? "opacity-10 pointer-events-none"
-          : ""
+          ? "text-gray-400"
+          : "text-gray-800 hover:bg-gray-100"
       }`}
     >
       <div>{props.date.getDate()}</div>
