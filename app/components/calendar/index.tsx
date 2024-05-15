@@ -86,6 +86,7 @@ export default function Calendar() {
     setAccessToken("");
     sessionStorage.removeItem("accessToken");
     sessionStorage.removeItem("UserID");
+    window.location.reload();
   };
 
   if (isLoading) return <div>Loading...</div>;
