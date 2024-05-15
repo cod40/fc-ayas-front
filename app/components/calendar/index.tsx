@@ -94,15 +94,21 @@ export default function Calendar() {
   return (
     <>
       <DayPicker
+        className="bg-gray-100 text-gray-800" // gpt
         components={{
           Day: (dayProps) => {
             const { date } = dayProps;
 
             const formattedDate = getFormattedDate(date) as string;
             const todayAttendInfo = attends?.[formattedDate];
+            const isActive = new Date().toDateString() === date.toDateString(); // Example for active  date gpt
+            const dayClasses = isActive
+              ? "bg-blue-100 border-blue-300"
+              : "hover:bg-blue-50"; // gpt
 
             return (
               <Day
+                className={`p-2 rounded shadow-sm ${dayClasses}`}
                 {...dayProps}
                 formattedDate={formattedDate}
                 data={todayAttendInfo}
@@ -140,7 +146,7 @@ export default function Calendar() {
 
             <button
               onClick={handleLoginClick}
-              className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-700"
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
               로그인
             </button>
