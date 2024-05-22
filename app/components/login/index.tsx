@@ -1,12 +1,13 @@
+import { useAccessToken, useUserInfo } from "@/app/stores/global";
 import { login } from "@/lib/api/login";
-import { accessTokenState, userInfoState } from "@/state/atoms/userState";
 import axios from "axios";
-import { useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { ChangeEvent, FormEvent, useState } from "react";
 
-export default function Login({ onClose }: { onClose?: () => void }) {
-  const setAccessToken = useSetRecoilState(accessTokenState);
-  const setUserInfo = useSetRecoilState(userInfoState);
+export default function Login({ onClose }: { onClose: () => void }) {
+  // const setAccessToken = useSetRecoilState(accessTokenState);
+  // const setUserInfo = useSetRecoilState(userInfoState);
+  const setAccessToken = useAccessToken((state) => state.setAccessToken);
+  const setUserInfo = useUserInfo((state) => state.setUserInfo);
 
   const [formData, setFormData] = useState({
     nickname: "",
@@ -14,12 +15,12 @@ export default function Login({ onClose }: { onClose?: () => void }) {
   });
   const [error, setError] = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const result = await login(formData);
@@ -29,14 +30,13 @@ export default function Login({ onClose }: { onClose?: () => void }) {
       const userInfo = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/users/${result?.UserID}`
       ); // userInfo 정보
-      setUserInfo(userInfo);
+      setUserInfo(userInfo?.data);
 
       if (result.token) {
         setAccessToken(result.token);
-        sessionStorage.setItem("accessToken", result.token);
         onClose();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error.message);
       setError(error.message || "로그인에 실패했습니다.");
     }

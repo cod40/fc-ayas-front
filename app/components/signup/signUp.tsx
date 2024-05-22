@@ -1,9 +1,10 @@
 import { signUp } from "@/lib/api/signUp";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import crypto from "crypto-js";
+import { OnCloseType } from "@/app/stores/app";
 
-const SignUpModal = ({ onClose }) => {
+export default function SignUpModal({ onClose }: OnCloseType) {
   const [formData, setFormData] = useState({
     name: "",
     nickname: "",
@@ -16,7 +17,7 @@ const SignUpModal = ({ onClose }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [certification, setCertification] = useState("");
 
-  const dummyData = [
+  const VERIFICATION_TEXT = [
     "감자털",
     "앙기모띠",
     "최승규탈모",
@@ -26,19 +27,18 @@ const SignUpModal = ({ onClose }) => {
     "찬우발닦개",
   ];
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
     if (successMessage) setSuccessMessage("");
   };
 
-  useEffect(() => {
-    console.log("폼데이터 인증단어 : ", formData.verificationCode);
-  }, [formData.verificationCode]);
-
-  const handleVerificationCodeSubmit = async (e) => {
+  const handleVerificationCodeSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
-    const verificationCode = dummyData[Math.floor(Math.random() * 7)];
+    const verificationCode =
+      VERIFICATION_TEXT[Math.floor(Math.random() * VERIFICATION_TEXT.length)];
     const encryptionCode = crypto.AES.encrypt(
       verificationCode,
       "fc-ayas"
@@ -59,7 +59,7 @@ const SignUpModal = ({ onClose }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       setError("비밀번호를 확인해주세요!");
@@ -84,7 +84,7 @@ const SignUpModal = ({ onClose }) => {
       setSuccessMessage("FC아얏스에 온 것을 환영합니다!");
       setTimeout(() => onClose(), 3000);
       sessionStorage.removeItem("encryptionCode");
-    } catch (error) {
+    } catch (error: any) {
       console.error("SignUp error:", error.message);
       setError(error.message || "회원가입에 실패했습니다.");
     }
@@ -141,8 +141,8 @@ const SignUpModal = ({ onClose }) => {
               id="password"
               name="password"
               required
-              minLength="4"
-              maxLength="4"
+              minLength={4}
+              maxLength={4}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               value={formData.password}
               onChange={handleChange}
@@ -161,8 +161,8 @@ const SignUpModal = ({ onClose }) => {
               id="confirmPassword"
               name="confirmPassword"
               required
-              minLength="4"
-              maxLength="4"
+              minLength={4}
+              maxLength={4}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               value={formData.confirmPassword}
               onChange={handleChange}
@@ -182,7 +182,7 @@ const SignUpModal = ({ onClose }) => {
               name="phone"
               required
               pattern="[0-9]{3}[0-9]{4}[0-9]{4}"
-              placeholder="01000000000"
+              placeholder="휴대폰 번호 (-제외)"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               value={formData.phone}
               onChange={handleChange}
@@ -226,6 +226,4 @@ const SignUpModal = ({ onClose }) => {
       </div>
     </div>
   );
-};
-
-export default SignUpModal;
+}
