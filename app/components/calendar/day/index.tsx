@@ -1,18 +1,15 @@
 import React from "react";
 import { DayProps } from "react-day-picker";
 import DayText from "./DayToText";
-import { AttendDateItem } from "@/app/stores/app";
+import { AdditionalProps, AttendDateItem } from "@/app/stores/app";
 
-export default function Day(props: DayProps & { data: AttendDateItem | null }) {
+export default function Day(
+  props: DayProps & { data: AttendDateItem | null } & AdditionalProps
+) {
   const { data, formattedDate, userAttendDates } = props;
 
   return (
     <div
-      // className={`pl-2 flex flex-col	justify-around h-[100%] ${
-      //   new Date().getMonth() + 1 !== props.date.getMonth() + 1
-      //     ? "opacity-10 pointer-events-none"
-      //     : ""
-      // }`}
       className={`flex flex-col justify-around h-full ${
         new Date().getMonth() + 1 !== props.date.getMonth() + 1
           ? "text-gray-400"
