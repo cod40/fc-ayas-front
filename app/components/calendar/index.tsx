@@ -19,7 +19,7 @@ export default function Calendar() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [userAttendDates, setUserAttendDates] = useState({}); //props로 내리기 때문에 useState로 유지
   const { accessToken, setAccessToken, removeAccessToken } = useAccessToken(); // zustand 예시
-  const { userInfo, setUserInfo, removeUserInfo } = useUserInfo(); // zustand
+  const { userInfo, setUserID, setUserInfo, removeUserInfo } = useUserInfo(); // zustand
 
   const {
     data: participantList,
@@ -41,6 +41,8 @@ export default function Calendar() {
   useEffect(() => {
     const userID = sessionStorage.getItem("UserID");
     if (userID) {
+      setUserID(userID);
+
       // 새로고침 시 유저 정보 서버로부터 다시 불러오기
       axios
         .get(`${process.env.NEXT_PUBLIC_API_URL}/users/${userID}`, {
@@ -85,7 +87,7 @@ export default function Calendar() {
     window.location.reload();
   };
 
-  // if (isLoading) return <Loading />; // 받아오는 동안 띄울 loading창
+  if (isLoading) return <Loading />; // 받아오는 동안 띄울 loading창
   // if (error) return <div>Error: {error.message}</div>; // 400 error or 서버가 꺼져있을 때  "Fail to ~~~"
 
   return (
