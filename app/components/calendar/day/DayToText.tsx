@@ -26,6 +26,16 @@ export default function DayToText({
   const isUserAttending = userAttendDates[formattedDate]?.includes(time);
   const toggleAttend = useToggleAttend(); // 커스텀 훅으로 변경
 
+  const getButtonColorClass = (length: number) => {
+    if (length <= 2) {
+      return "bg-gray-700 text-white";
+    } else if (length >= 3 && length <= 5) {
+      return "bg-yellow-200";
+    } else if (length >= 6) {
+      return "bg-[#01a553] text-white";
+    }
+  };
+
   const handleToggleAttend = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     toggleAttend(e, isUserAttending, formattedDate, time, userID); // 커스텀 훅으로 변경
@@ -43,25 +53,20 @@ export default function DayToText({
       ) : (
         ""
       )}
-      <div className="flex gap-x-12 text-sm">
-        <button onClick={() => setIsModalOpen(!isModalOpen)}>
-          {text} ({attendList?.length})
-        </button>
+      <div className="flex gap-x-3 text-sm">
+        <span>{text}</span>
+        <span className="pointer-events-auto">
+          <button
+            className={`w-[50px] rounded-full font-medium  ${getButtonColorClass(
+              attendList?.length as number
+            )}`}
+            onClick={() => setIsModalOpen(!isModalOpen)}
+          >
+            {attendList?.length}
+          </button>
+        </span>
         <button type="button" onClick={(e) => handleToggleAttend(e)}>
-          <Image
-            src={
-              isUserAttending
-                ? "/images/attendBtn/ativated.png"
-                : "/images/attendBtn/disabled.png"
-            }
-            alt={
-              isUserAttending
-                ? "participate button activated"
-                : "participate button disabled"
-            }
-            width={20}
-            height={20}
-          />
+          {isUserAttending ? "❌" : "⚽"}
         </button>
       </div>
     </>

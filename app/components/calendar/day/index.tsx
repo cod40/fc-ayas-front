@@ -10,17 +10,17 @@ export default function Day(
 
   return (
     <div
-      className={`flex flex-col justify-around h-full ${
+      className={`flex flex-col justify-around h-full pl-[11px] ${
         new Date().getMonth() + 1 !== props.date.getMonth() + 1
           ? "text-gray-400"
-          : "text-gray-800 hover:bg-gray-100"
+          : "text-gray-800 hover:bg-gray-100 hover:rounded-[5px]"
       }`}
     >
       <div>{props.date.getDate()}</div>
       <DayText
         time={"0712"}
         formattedDate={formattedDate}
-        text="(오전) 07 ~ 12"
+        text="Time. 07~12"
         attendList={data?.["0712"] || []}
         day={props.date.getDay()}
         userAttendDates={userAttendDates}
@@ -28,7 +28,7 @@ export default function Day(
       <DayText
         time={"1218"}
         formattedDate={formattedDate}
-        text="(오후) 12 ~ 18"
+        text="Time. 12~18"
         attendList={data?.["1218"] || []}
         day={props.date.getDay()}
         userAttendDates={userAttendDates}
@@ -36,7 +36,7 @@ export default function Day(
       <DayText
         time={"1800"}
         formattedDate={formattedDate}
-        text="(오후) 18 ~ 00"
+        text="Time. 18~00"
         attendList={data?.["1800"] || []}
         day={props.date.getDay()}
         userAttendDates={userAttendDates}
