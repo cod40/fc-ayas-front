@@ -65,6 +65,84 @@
     --ring: 212.7 26.8% 83.9%;
   }
 }
+.rdp-vhidden {
+  display: none;
+}
+.rdp-caption_label {
+  display: none;
+}
+.rdp-nav {
+  display: none;
+}
+.rdp-caption_dropdowns {
+  display: flex;
+  padding: 10px 0px;
+}
+
+.rdp-dropdown_month {
+  margin-right: 5px;
+}
+
+.rdp-dropdown {
+  background-color: #ececec;
+}
+
+.rdp-head_cell:nth-child(1) {
+  visibility: hidden;
+}
+.rdp-head_cell:nth-child(1)::before {
+  visibility: visible;
+  content: "일요일";
+  line-height: 0;
+}
+
+.rdp-head_cell:nth-child(2) {
+  visibility: hidden;
+}
+.rdp-head_cell:nth-child(2)::before {
+  visibility: visible;
+  content: "월요일";
+}
+
+.rdp-head_cell:nth-child(3) {
+  visibility: hidden;
+}
+.rdp-head_cell:nth-child(3)::before {
+  visibility: visible;
+  content: "화요일";
+}
+
+.rdp-head_cell:nth-child(4) {
+  visibility: hidden;
+}
+.rdp-head_cell:nth-child(4)::before {
+  visibility: visible;
+  content: "수요일";
+}
+
+.rdp-head_cell:nth-child(5) {
+  visibility: hidden;
+}
+.rdp-head_cell:nth-child(5)::before {
+  visibility: visible;
+  content: "목요일";
+}
+
+.rdp-head_cell:nth-child(6) {
+  visibility: hidden;
+}
+.rdp-head_cell:nth-child(6)::before {
+  visibility: visible;
+  content: "금요일";
+}
+
+.rdp-head_cell:nth-child(7) {
+  visibility: hidden;
+}
+.rdp-head_cell:nth-child(7)::before {
+  visibility: visible;
+  content: "토요일";
+}
 
 @layer base {
   * {
@@ -82,7 +160,7 @@
 
 /* 각 날짜 셀의 너비와 높이 설정 */
 .rdp .rdp-cell {
-  @apply w-96 h-40; /* 셀의 너비와 높이를 조절 */
+  @apply w-40 h-40; /* 셀의 너비와 높이를 조절 */
 }
 
 /* 달력 테이블의 전체 너비 설정 */
@@ -99,7 +177,7 @@
 .rdp .rdp-month,
 .rdp .rdp-week,
 .rdp .rdp-cell {
-  @apply m-0 p-0; /* 여백과 패딩을 0으로 설정 */
+  /* @apply m-0 pl-[11px]; 여백과 패딩을 0으로 설정 */
 }
 
 .cellParentDiv .cellChildDiv {
@@ -114,14 +192,24 @@
 }
 
 .rdp-table {
-  border: 1px solid #000000;
+  /* border: 1px solid #000000; */
+  border-collapse: separate;
+
+  border-spacing: 8px;
 }
-.rdp-table > tr,
+.rdp-table .rdp-table > tr,
 th,
 td {
-  border: 1px solid #000000;
+  /* border: 1px solid #000000; */
 }
 
+.rdp-table th,
+.rdp-table td {
+  background-color: #cdcdcd;
+  border-radius: 5px;
+}
+
+/*  */
 /* 로딩창1 (일반적인 로딩창) */
 /* html: <div class= "loader" ></div>  */
 /* .loader {

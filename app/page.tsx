@@ -1,5 +1,6 @@
 "use client";
 
+import Calendar from "@/app/components/calendar";
 import DatePickerComponent from "@/app/components/calendar";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -13,11 +14,9 @@ const CalendarPage: NextPage = () => {
         <title>fc-ayas-calendar</title>
         <meta name="fc-ayas-calendar" content="fc-ayas-schedule" />
       </Head>
-      <RecoilRoot>
-        <main className="bg-background">
-          <DatePickerComponent />
-        </main>
-      </RecoilRoot>
+      <main className="bg-[#ececec] flex justify-center items-center">
+        <Calendar />
+      </main>
     </>
   );
 };

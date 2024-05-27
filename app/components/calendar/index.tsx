@@ -14,6 +14,23 @@ import { useAccessToken, useUserInfo } from "@/app/stores/global";
 type AttendsByDate = {
   [key: string]: string[];
 };
+
+const qqq = () => {
+  return (
+    <thead className="rdp-head">
+      <tr className="rdp-head_row">
+        <th className="rdp-head_cell">SunDay</th>
+        <th className="rdp-head_cell">Monday</th>
+        <th className="rdp-head_cell">Tuesday</th>
+        <th className="rdp-head_cell">Wednesday</th>
+        <th className="rdp-head_cell">Thursday</th>
+        <th className="rdp-head_cell">Friday</th>
+        <th className="rdp-head_cell">Saturday</th>
+      </tr>
+    </thead>
+  );
+};
+
 export default function Calendar() {
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -91,9 +108,12 @@ export default function Calendar() {
   // if (error) return <div>Error: {error.message}</div>; // 400 error or 서버가 꺼져있을 때  "Fail to ~~~"
 
   return (
-    <>
+    <div className="w-[1500px]">
       <DayPicker
-        className="bg-gray-100 text-gray-800" // gpt
+        captionLayout="dropdown-buttons"
+        fromYear={2023}
+        toYear={2024}
+        className=" text-gray-800" // gpt
         components={{
           Day: (dayProps) => {
             const { date } = dayProps;
@@ -119,7 +139,7 @@ export default function Calendar() {
         }}
         mode="multiple"
       />
-      <div>
+      {/* <div>
         {accessToken !== "" ? (
           <div className="flex items-center  p-4 bg-white shadow-md">
             <p className="text-gray-800 text-lg">
@@ -159,7 +179,7 @@ export default function Calendar() {
       )}
       {isLoginModalOpen && (
         <LoginModal onClose={() => setIsLoginModalOpen(false)} />
-      )}
-    </>
+      )} */}
+    </div>
   );
 }
