@@ -1,9 +1,8 @@
 import AttendanceModal from "@/app/components/modal/AttendanceModal";
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import axios from "axios";
-import { mutate } from "swr";
 import { useToggleAttend } from "@/lib/api/useToggleAttend";
+import { useUserInfo } from "@/app/stores/global";
+import Image from "next/image";
 
 type DayTextProps = {
   text: string;
@@ -23,10 +22,7 @@ export default function DayToText({
   userAttendDates,
 }: DayTextProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  useEffect(() => {
-    const userID = sessionStorage.getItem("UserID");
-  }, []);
-
+  const { userID } = useUserInfo();
   const isUserAttending = userAttendDates[formattedDate]?.includes(time);
   const toggleAttend = useToggleAttend(); // 커스텀 훅으로 변경
 
@@ -34,35 +30,6 @@ export default function DayToText({
     e.preventDefault();
     toggleAttend(e, isUserAttending, formattedDate, time, userID); // 커스텀 훅으로 변경
   };
-
-  // const toggleAttend = async (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault();
-  //   const method = isUserAttending ? "delete" : "post";
-  //   const payload = {
-  //     date: formattedDate,
-  //     time: time,
-  //     userID: Number(userID),
-  //   };
-
-  //   try {
-  //     const response = await axios({
-  //       method: method,
-  //       url: `${process.env.NEXT_PUBLIC_API_URL}/attends`,
-  //       data: payload,
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-
-  //     if (response.status === 200) {
-  //       mutate(`${process.env.NEXT_PUBLIC_API_URL}/attends`);
-  //     }
-  //   } catch (err) {
-  //     console.error("Error toggling attend:", err);
-  //   }
-  // };
-
-  const buttonImageSrc = isUserAttending ? "" : "";
 
   return (
     <>
@@ -80,12 +47,8 @@ export default function DayToText({
         <button onClick={() => setIsModalOpen(!isModalOpen)}>
           {text} ({attendList?.length})
         </button>
-        <button
-          type="button"
-          className="w-[20px] h-[20px]"
-          onClick={(e) => handleToggleAttend(e)}
-        >
-          <img
+        <button type="button" onClick={(e) => handleToggleAttend(e)}>
+          <Image
             src={
               isUserAttending
                 ? "/images/attendBtn/ativated.png"
@@ -96,6 +59,8 @@ export default function DayToText({
                 ? "participate button activated"
                 : "participate button disabled"
             }
+            width={20}
+            height={20}
           />
         </button>
       </div>

@@ -24,7 +24,9 @@ type UserInfoItem = {
 
 type UserInfo = {
   userInfo: UserInfoItem;
+  userID: string;
   setUserInfo: (newUserInfo: UserInfoItem) => void;
+  setUserID: (newUserID: string) => void;
   removeUserInfo: () => void;
 };
 
@@ -52,27 +54,9 @@ const initialUserInfo: UserInfoItem = {
 
 export const useUserInfo = create<UserInfo>((set, get) => ({
   userInfo: initialUserInfo,
+  userID: "",
+
   setUserInfo: (userInfo) => set({ userInfo }),
   removeUserInfo: () => set({ userInfo: initialUserInfo }),
+  setUserID: (userID) => set({ userID }),
 }));
-
-//export const useUserInfo = create<UserInfo>((set, get) => ({
-//   userInfo: {
-//     Attends: { Date: '', ID: 0, Time: '', UserID: 0 }, // AttedsItem의 기본값
-//     ID: 0,
-//     Name: '',
-//     Nickname: '',
-//     phone: '',
-//   },
-//   setUserInfo: (userInfo) => set({ userInfo }),
-//   removeUserInfo: () => set({
-//     userInfo: {
-//       Attends: { Date: '', ID: 0, Time: '', UserID: 0 },
-//       ID: 0,
-//       Name: '',
-//       Nickname: '',
-//       phone: '',
-//     }
-//   }),
-// }));
-// 휴대폰 번호 (-제외)

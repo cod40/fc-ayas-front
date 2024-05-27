@@ -124,7 +124,7 @@ td {
 
 /* 로딩창1 (일반적인 로딩창) */
 /* html: <div class= "loader" ></div>  */
-.loader {
+/* .loader {
   width: 50px;
   aspect-ratio: 1;
   border-radius: 50%;
@@ -215,10 +215,10 @@ td {
   100% {
     transform: scaleY(-1) rotate(-135deg);
   }
-}
+} */
 
 /* 로딩창2 (축구공 360도) */
-/* .loader {
+.loader {
   width: 500px;
   height: 500px;
   border-radius: 50%;
@@ -235,4 +235,4 @@ td {
   to {
     transform: rotate(360deg);
   }
-} */
+}
