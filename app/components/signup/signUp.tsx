@@ -16,6 +16,8 @@ export default function SignUpModal({ onClose }: OnCloseType) {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [certification, setCertification] = useState("");
+  const [phoneMessage, setPhoneMessage] = useState("");
+  const [phoneMessageColor, setPhoneMessageColor] = useState("text-gray-500");
 
   const VERIFICATION_TEXT = [
     "감자털",
@@ -37,6 +39,14 @@ export default function SignUpModal({ onClose }: OnCloseType) {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
+    const phonePattern = /^[0-9]{3}[0-9]{4}[0-9]{4}$/;
+    if (!phonePattern.test(formData.phone)) {
+      setPhoneMessage("번호를 확인해주세요");
+      setPhoneMessageColor("text-red-500");
+      return;
+    }
+    setPhoneMessage("인증번호가 발송됐습니다.");
+    setPhoneMessageColor("text-green-500");
     const verificationCode =
       VERIFICATION_TEXT[Math.floor(Math.random() * VERIFICATION_TEXT.length)];
     const encryptionCode = crypto.AES.encrypt(
@@ -52,6 +62,7 @@ export default function SignUpModal({ onClose }: OnCloseType) {
           Word: verificationCode,
         },
       });
+
       sessionStorage.setItem("encryptionCode", encryptionCode);
       setCertification(verificationCode);
     } catch (err) {
@@ -176,24 +187,31 @@ export default function SignUpModal({ onClose }: OnCloseType) {
             >
               휴대폰 번호
             </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              required
-              pattern="[0-9]{3}[0-9]{4}[0-9]{4}"
-              placeholder="휴대폰 번호 (-제외)"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              value={formData.phone}
-              onChange={handleChange}
-            />
-            <button
-              type="button"
-              className="mt-2 bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded"
-              onClick={handleVerificationCodeSubmit}
-            >
-              인증번호 발송
-            </button>
+            <div className="flex">
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+                pattern="[0-9]{3}[0-9]{4}[0-9]{4}"
+                placeholder="휴대폰 번호 (-제외)"
+                className="mt-1 block w-3/5 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+              <button
+                type="button"
+                className="mt-1 ml-2 bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                onClick={handleVerificationCodeSubmit}
+              >
+                인증번호 발송
+              </button>
+            </div>
+            {phoneMessage && (
+              <p className={`text-xs mt-1 ${phoneMessageColor}`}>
+                {phoneMessage}
+              </p>
+            )}
             <input
               type="verificationCode"
               id="verificationCode"
