@@ -54,7 +54,7 @@ export default function DayToText({
         ""
       )}
       <div className="flex gap-x-3 text-sm">
-        <span>{text}</span>
+        <span className="select-none">{text}</span>
         <span className="pointer-events-auto">
           <button
             className={`w-[50px] rounded-full font-medium  ${getButtonColorClass(
@@ -62,7 +62,9 @@ export default function DayToText({
             )}`}
             onClick={() => setIsModalOpen(!isModalOpen)}
           >
-            {attendList?.length}
+            <p className="hover:underline underline-offset-2">
+              {attendList?.length}
+            </p>
           </button>
         </span>
         <button type="button" onClick={(e) => handleToggleAttend(e)}>
