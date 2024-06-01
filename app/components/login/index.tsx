@@ -8,6 +8,7 @@ export default function Login({ onClose }: { onClose: () => void }) {
   // const setUserInfo = useSetRecoilState(userInfoState);
   const setAccessToken = useAccessToken((state) => state.setAccessToken);
   const setUserInfo = useUserInfo((state) => state.setUserInfo);
+  const setUserID = useUserInfo((state) => state.setUserID);
 
   const [formData, setFormData] = useState({
     nickname: "",
@@ -31,6 +32,7 @@ export default function Login({ onClose }: { onClose: () => void }) {
         `${process.env.NEXT_PUBLIC_API_URL}/users/${result?.UserID}`
       ); // userInfo 정보
       setUserInfo(userInfo?.data);
+      setUserID(userInfo?.data.ID);
 
       if (result.token) {
         setAccessToken(result.token);

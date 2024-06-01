@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { FontClassNames } from "@/styles/font";
 import { useAccessToken, useUserInfo } from "./stores/global";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SignUpModal from "./components/signup/signUp";
 import LoginModal from "./components/login/index";
 
@@ -25,6 +25,10 @@ export default function RootLayout({
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { accessToken, removeAccessToken } = useAccessToken();
   const { userInfo, removeUserInfo } = useUserInfo();
+  const [isMount, setIsMount] = useState(false);
+  useEffect(() => {
+    setIsMount(true);
+  }, []);
 
   const handleLogoutClick = () => {
     removeUserInfo();
@@ -57,7 +61,7 @@ export default function RootLayout({
             </li>
             <li>
               <div className="text-white w-[450px]">
-                {accessToken !== "" ? (
+                {isMount && accessToken !== "" ? (
                   <div className="flex items-center justify-between  p-4  ">
                     <p className="text-white text-lg">
                       {userInfo?.Nickname
@@ -94,42 +98,6 @@ export default function RootLayout({
                 )}
               </div>
             </li>
-            {/* <div>
-        {accessToken !== "" ? (
-          <div className="flex items-center  p-4 bg-white shadow-md">
-            <p className="text-gray-800 text-lg">
-              {userInfo?.Nickname
-                ? `${userInfo?.Nickname}님 아얏스에 오신 것을 환영합니다!`
-                : "로딩 중..."}
-            </p>
-            <button
-              type="button"
-              onClick={handleLogoutClick}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300"
-            >
-              로그아웃
-            </button>
-          </div>
-        ) : (
-          <>
-            <button
-              onClick={handleSignUpClick}
-              className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-700"
-            >
-              회원가입
-            </button>
-
-            <button
-              onClick={handleLoginClick}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-            >
-              로그인
-            </button>
-          </>
-        )}
-      </div>
-
-       */}
           </ul>
         </nav>
         <main>{children}</main>

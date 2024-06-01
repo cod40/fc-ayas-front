@@ -1,3 +1,7 @@
+import { useUserInfo } from "@/app/stores/global";
+import { fetcher } from "@/lib/fetcher";
+import useSWR from "swr";
+
 type AttendanceModalProps = {
   isModalOpen?: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
@@ -6,6 +10,14 @@ type AttendanceModalProps = {
 };
 
 export default function AttendanceModal(props: AttendanceModalProps) {
+  // console.log(props);
+  const { userID } = useUserInfo(); // zustand
+
+  const { data, error, isLoading } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_URL}/comment/${props.formattedDate}${props.time}`,
+    fetcher
+  );
+  console.log(data);
   function closeModal() {
     props.setIsModalOpen(false);
   }
@@ -13,6 +25,28 @@ export default function AttendanceModal(props: AttendanceModalProps) {
   function handleModalClick(e: React.MouseEvent<HTMLDivElement>) {
     e.stopPropagation();
   }
+
+  //   const postComment = async (payload) => {
+  //     const commentPayload = {
+  //       content: "string (ex. 저는 10시부터 가능해요)",
+  //       timeBlockID: timeBlockID,
+  //       userID
+  //   };
+
+  //     try {
+  //         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comments`, {
+  //             method: 'POST',
+  //             headers: {
+  //                 'Content-Type': 'application/json'
+  //             },
+  //             body: JSON.stringify(payload)
+  //         });
+  //         const data = await response.json();
+  //         return data;
+  //     } catch (error) {
+  //         console.error("Error posting comment:", error);
+  //     }
+  // }
 
   return (
     <>
@@ -51,6 +85,8 @@ export default function AttendanceModal(props: AttendanceModalProps) {
               ))}
             </ul>
           </div>
+          <div></div>
+
           {/* 모달 푸터 */}
           <div className="px-6 py-4 bg-gray-50 text-right">
             <button

@@ -25,6 +25,10 @@ export default function DayToText({
   const { userID } = useUserInfo();
   const isUserAttending = userAttendDates[formattedDate]?.includes(time);
   const toggleAttend = useToggleAttend(); // 커스텀 훅으로 변경
+  // console.log(text); //Time. 18~00
+  // console.log(day); // 6
+  // console.log(formattedDate); // 20240706
+  // console.log(time); // 1800
 
   const getButtonColorClass = (length: number) => {
     if (length <= 2) {
@@ -49,6 +53,8 @@ export default function DayToText({
           attendList={attendList}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
+          formattedDate={formattedDate}
+          time={time}
         />
       ) : (
         ""
@@ -68,6 +74,13 @@ export default function DayToText({
           </button>
         </span>
         <button type="button" onClick={(e) => handleToggleAttend(e)}>
+          {/* <Image
+            className="bg-black"
+            src="/images/soccerBall/soccer.png"
+            alt=""
+            width="20"
+            height="20"
+          /> */}
           {isUserAttending ? "❌" : "⚽"}
         </button>
       </div>

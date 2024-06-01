@@ -18,7 +18,7 @@ type AttendsByDate = {
 export default function Calendar() {
   const [userAttendDates, setUserAttendDates] = useState({}); //props로 내리기 때문에 useState로 유지
   const { accessToken, setAccessToken } = useAccessToken(); // zustand 예시
-  const { userInfo, setUserID, setUserInfo } = useUserInfo(); // zustand
+  const { userInfo, userID, setUserID, setUserInfo } = useUserInfo(); // zustand
 
   const {
     data: participantList,
@@ -54,7 +54,7 @@ export default function Calendar() {
           console.error("Error fetching user data:", error);
         });
     }
-  }, [setUserInfo, setAccessToken, participantList]);
+  }, [setUserInfo, setAccessToken, participantList, userID]);
 
   useDeepCompareEffect(() => {
     if (userInfo?.Attends) {
