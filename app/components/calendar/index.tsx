@@ -85,7 +85,7 @@ export default function Calendar() {
           Day: (dayProps) => {
             const { date } = dayProps;
             // console.log(dayProps); date, displayMonth
-
+            const day = dayProps.date.getDate();
             const formattedDate = getFormattedDate(date) as string;
             const todayAttendInfo = participantList?.[formattedDate];
             const isActive = new Date().toDateString() === date.toDateString(); // Example for active  date gpt

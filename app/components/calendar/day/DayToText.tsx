@@ -30,6 +30,21 @@ export default function DayToText({
   // console.log(formattedDate); // 20240706
   // console.log(time); // 1800
 
+  useEffect(() => {
+    if (isModalOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.cssText = `
+        position: fixed; 
+        top: -${scrollY}px;
+        overflow-y: scroll;
+        width: 100%;`;
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    }
+  }, [isModalOpen]);
+
   const getButtonColorClass = (length: number) => {
     if (length <= 2) {
       return "bg-gray-700 text-white";

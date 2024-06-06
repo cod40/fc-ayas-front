@@ -28,7 +28,20 @@ export default function RootLayout({
   const [isMount, setIsMount] = useState(false);
   useEffect(() => {
     setIsMount(true);
-  }, []);
+
+    if (isSignUpModalOpen || isLoginModalOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.cssText = `
+        position: fixed; 
+        top: -${scrollY}px;
+        overflow-y: scroll;
+        width: 100%;`;
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    }
+  }, [isSignUpModalOpen, isLoginModalOpen]);
 
   const handleLogoutClick = () => {
     removeUserInfo();
@@ -39,8 +52,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={FontClassNames}>
-        <nav className="w-full h-[60px] bg-black flex items-center justify-center">
-          <ul className="w-full flex justify-between items-center px-4">
+        <nav className="w-full h-[60px] bg-black flex items-center justify-center px-4">
+          <ul className="w-full flex justify-between items-center">
             <li>
               <div>
                 <button className="relative group">
@@ -60,9 +73,9 @@ export default function RootLayout({
               </div>
             </li>
             <li>
-              <div className="text-white w-[450px]">
+              <div className="text-white w-[510px]">
                 {isMount && accessToken !== "" ? (
-                  <div className="flex items-center justify-between  p-4  ">
+                  <div className="flex items-center justify-end p-4  ">
                     <p className="text-white text-lg">
                       {userInfo?.Nickname
                         ? `${userInfo?.Nickname}님 아얏스에 오신 것을 환영합니다!`
@@ -71,13 +84,13 @@ export default function RootLayout({
                     <button
                       type="button"
                       onClick={handleLogoutClick}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                      className="bg-red-500 hover:bg-red-700 ml-2 text-white font-bold py-2 px-4 rounded transition duration-300"
                     >
                       로그아웃
                     </button>
                   </div>
                 ) : (
-                  <div className="flex justify-center">
+                  <div className="flex justify-end">
                     <span className="inline-block mr-2">
                       <button
                         onClick={() => setIsSignUpModalOpen(true)}

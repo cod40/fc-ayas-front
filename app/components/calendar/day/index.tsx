@@ -22,7 +22,7 @@ export default function Day(
         formattedDate={formattedDate}
         text="Time. 07~12"
         attendList={data?.["0712"] || []}
-        day={props.date.getDay()}
+        day={props.date.getDate()}
         userAttendDates={userAttendDates}
       />
       <DayText
@@ -30,7 +30,7 @@ export default function Day(
         formattedDate={formattedDate}
         text="Time. 12~18"
         attendList={data?.["1218"] || []}
-        day={props.date.getDay()}
+        day={props.date.getDate()}
         userAttendDates={userAttendDates}
       />
       <DayText
@@ -38,7 +38,7 @@ export default function Day(
         formattedDate={formattedDate}
         text="Time. 18~00"
         attendList={data?.["1800"] || []}
-        day={props.date.getDay()}
+        day={props.date.getDate()}
         userAttendDates={userAttendDates}
       />
     </div>
